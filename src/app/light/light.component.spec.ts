@@ -23,11 +23,11 @@ describe('LightComponent', () => {
 
   it('should date is in summer', () => {
     let summer = new Date(2024, 6, 14); // 14 Juillet 2024
-    expect(component.isSummer(summer)).toBeTrue();
+    expect(component.isSummer(summer)).toBeTruthy();
     summer = new Date(2024, 5, 21); // 21 Juin 2024
-    expect(component.isSummer(summer)).toBeTrue();
+    expect(component.isSummer(summer)).toBeTruthy();
     summer = new Date(2024, 8, 20); // 20 Septembre 2024
-    expect(component.isSummer(summer)).toBeTrue();
+    expect(component.isSummer(summer)).toBeTruthy();
   })
 
   it('should date is not in summer', () => {

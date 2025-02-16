@@ -1,7 +1,8 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
-
 import {NowComponent} from './now.component';
 import {AppComponent} from "../app.component";
+import {provideHttpClient} from '@angular/common/http';
+import {provideHttpClientTesting} from '@angular/common/http/testing';
 import {SolarService} from '../solar.service';
 import {of} from "rxjs";
 import {SunPosition} from '../sun-position';
@@ -9,19 +10,20 @@ import {SunPosition} from '../sun-position';
 describe('NowComponent', () => {
   let component: NowComponent;
   let fixture: ComponentFixture<NowComponent>;
-  let solarServiceStub: Partial<SolarService>;
-
+  const sunsetDate = of(new SunPosition(new Date(2024, 6, 23, 21, 44)));
+  const mockSolarService = {
+    findSunPositionAtEiffelTower: jest.fn(() => sunsetDate),
+  } as Partial<SolarService>;
   beforeEach(async () => {
-    const sunsetDate = of(new SunPosition(new Date(2024, 6, 23, 21, 44)));
-    solarServiceStub = {
-      findSunPositionAtEiffelTower: jasmine.createSpy('findSunPositionAtEiffelTower').and.returnValue(sunsetDate)
-    };
-
+    jest.useFakeTimers().setSystemTime(new Date(2024, 6, 14, 18, 0));
     await TestBed.configureTestingModule({
-      providers: [{provide: SolarService, useValue: solarServiceStub}],
-      imports: [NowComponent]
+      imports: [NowComponent],
+      providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        {provide: SolarService, useValue: mockSolarService}
+      ]
     }).compileComponents();
-
     fixture = TestBed.createComponent(NowComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -32,8 +34,7 @@ describe('NowComponent', () => {
   });
 
   it('should render date and time now', () => {
-    const dateNow = new Date(2024, 6, 14, 18, 0)
-    jasmine.clock().mockDate(dateNow); // Il est 18h00 le 14 juillet 2024
+    const dateNow = new Date(2024, 6, 14, 18, 0) // Il est 18h00 le 14 juillet 2024
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
