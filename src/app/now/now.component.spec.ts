@@ -6,22 +6,25 @@ import {provideHttpClientTesting} from '@angular/common/http/testing';
 import {SolarService} from '../solar.service';
 import {of} from "rxjs";
 import {SunPosition} from '../sun-position';
+import {LightService} from '../light.service';
 
 describe('NowComponent', () => {
   let component: NowComponent;
   let fixture: ComponentFixture<NowComponent>;
+  const dateNow = new Date(2024, 6, 14, 18, 0) // Il est 18h00 le 14 juillet 2024
   const sunsetDate = of(new SunPosition(new Date(2024, 6, 23, 21, 44)));
   const mockSolarService = {
     findSunPositionAtEiffelTower: jest.fn(() => sunsetDate),
   } as Partial<SolarService>;
   beforeEach(async () => {
-    jest.useFakeTimers().setSystemTime(new Date(2024, 6, 14, 18, 0));
+    jest.useFakeTimers().setSystemTime(dateNow);
     await TestBed.configureTestingModule({
       imports: [NowComponent],
       providers: [
         provideHttpClient(),
         provideHttpClientTesting(),
-        {provide: SolarService, useValue: mockSolarService}
+        {provide: SolarService, useValue: mockSolarService},
+        LightService
       ]
     }).compileComponents();
     fixture = TestBed.createComponent(NowComponent);
@@ -34,7 +37,6 @@ describe('NowComponent', () => {
   });
 
   it('should render date and time now', () => {
-    const dateNow = new Date(2024, 6, 14, 18, 0) // Il est 18h00 le 14 juillet 2024
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
@@ -52,6 +54,13 @@ describe('NowComponent', () => {
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.querySelector('#sunset')?.textContent).toContain('Aujourd\'hui le soleil se couche à 21h44 sur la tour Eiffel');
+  });
+
+  it('should turn off at 23h45 today', () => {
+    const fixture = TestBed.createComponent(NowComponent);
+    fixture.detectChanges();
+    const compiled = fixture.nativeElement as HTMLElement;
+    expect(compiled.querySelector('#turnOff')?.textContent).toContain('Aujourd\'hui la tour Eiffel s\'éteint à 00h45.');
   });
 
 });

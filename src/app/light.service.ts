@@ -1,19 +1,15 @@
-import {Component} from '@angular/core';
-import {SunPosition} from '../sun-position';
+import { Injectable } from '@angular/core';
 
-@Component({
-  selector: 'app-light',
-  standalone: true,
-  imports: [],
-  templateUrl: './light.component.html',
-  styleUrl: './light.component.css'
+@Injectable({
+  providedIn: 'root'
 })
-export class LightComponent {
-  public sunset = new Date();
-  sunPosition: SunPosition | undefined;
+export class LightService {
+
   private firstDayOfSeason = 21;
   private firstMonthOfSummer = Month.June;
   private lastMonthOfSummer = Month.September;
+
+  constructor() { }
 
   public isSummer(summer: Date): boolean {
     if (this.isCompleteSummerMonth(summer)) {
@@ -31,6 +27,17 @@ export class LightComponent {
   private isCompleteSummerMonth(summer: Date) {
     return summer.getMonth() > this.firstMonthOfSummer && summer.getMonth() < this.lastMonthOfSummer;
   }
+
+  public turnOff(date: Date) {
+    date.setMinutes(45);
+    if (this.isSummer(date)){
+      date.setHours(0);
+    } else {
+      date.setHours(23);
+    }
+    return date;
+  }
+
 }
 
 enum Month {
