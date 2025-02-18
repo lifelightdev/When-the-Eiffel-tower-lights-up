@@ -2,7 +2,7 @@ import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {parse} from 'date-fns';
 import {tap} from "rxjs";
-import {SunPosition} from './sun-position';
+import {SunPosition} from '../sun-position';
 
 @Injectable({
   providedIn: 'root'

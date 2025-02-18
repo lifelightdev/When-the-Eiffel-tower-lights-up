@@ -3,10 +3,10 @@ import {NowComponent} from './now.component';
 import {AppComponent} from "../app.component";
 import {provideHttpClient} from '@angular/common/http';
 import {provideHttpClientTesting} from '@angular/common/http/testing';
-import {SolarService} from '../solar.service';
+import {SolarService} from '../service/solar.service';
 import {of} from "rxjs";
 import {SunPosition} from '../sun-position';
-import {LightService} from '../light.service';
+import {LightService} from '../service/light.service';
 
 describe('NowComponent', () => {
   let component: NowComponent;

@@ -1,7 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {DatePipe} from "@angular/common";
-import {SolarService} from '../solar.service';
-import {LightService} from '../light.service';
+import {SolarService} from '../service/solar.service';
+import {LightService} from '../service/light.service';
+import {LightsUpService} from '../service/lights-up.service';
 
 @Component({
   selector: 'app-now',
@@ -15,9 +16,11 @@ export class NowComponent implements OnInit {
   public clock = new Date();
   public sunset: Date | undefined;
   public turnOff: Date | undefined;
+  public lightsUp: Date[] | undefined;
 
   constructor(private solarService: SolarService,
-              private lightService: LightService) {
+              private lightService: LightService,
+              private lightUpService: LightsUpService) {
   }
 
   ngOnInit(): void {
@@ -30,6 +33,7 @@ export class NowComponent implements OnInit {
 
   private refresh() {
     this.clock = new Date();
+    this.lightsUp = this.lightUpService.lightsUp(this.sunset, this.turnOff);
   }
 
 }
