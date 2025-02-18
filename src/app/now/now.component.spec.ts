@@ -11,8 +11,8 @@ import {LightService} from '../service/light.service';
 describe('NowComponent', () => {
   let component: NowComponent;
   let fixture: ComponentFixture<NowComponent>;
-  const dateNow = new Date(2024, 6, 14, 18, 0) // Il est 18h00 le 14 juillet 2024
-  const sunsetDate = of(new SunPosition(new Date(2024, 6, 23, 21, 44)));
+  const dateNow = new Date(2024, 5, 14, 18, 0) // Il est 18h00 le 14 juin 2024
+  const sunsetDate = of(new SunPosition(new Date(2024, 5, 14, 21, 44)));
   const mockSolarService = {
     findSunPositionAtEiffelTower: jest.fn(() => sunsetDate),
   } as Partial<SolarService>;
@@ -60,7 +60,14 @@ describe('NowComponent', () => {
     const fixture = TestBed.createComponent(NowComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('#turnOff')?.textContent).toContain('Aujourd\'hui la tour Eiffel s\'éteint à 00h45.');
+    expect(compiled.querySelector('#turnOff')?.textContent).toContain('Aujourd\'hui la tour Eiffel s\'éteint à 23h45.');
+  });
+
+  it('should light up at 22h00 22h00, 23h00 et 0h00 today', () => {
+    const fixture = TestBed.createComponent(NowComponent);
+    fixture.detectChanges();
+    const compiled = fixture.nativeElement as HTMLElement;
+    expect(compiled.querySelector('#lightUp')?.textContent).toContain('Aujourd\'hui la tour Eiffel va scintiller à 22h00, 23h00 et 0h00.');
   });
 
 });
